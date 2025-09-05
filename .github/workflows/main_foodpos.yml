@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: windows-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -23,7 +23,7 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '9.x'
+          dotnet-version: "9.x"
 
       - name: Build with dotnet
         run: dotnet build FoodPos/FoodPos.sln --configuration Release
@@ -46,22 +46,22 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-          
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_... }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_... }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_... }}
-          
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'FoodPos'
-          slot-name: 'Production'
+          app-name: "FoodPos"
+          slot-name: "Production"
           package: .
-          
+
   deploy-dev:
     runs-on: windows-latest
     needs: build
@@ -71,43 +71,43 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-          
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_... }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_... }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_... }}
-          
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'FoodPos-dev'
-          slot-name: 'Production'
+          app-name: "FoodPos-dev"
+          slot-name: "Production"
           package: .
 
   deploy-qa:
     runs-on: windows-latest
     needs: build
-    if: github.ref == 'refs/heads/qa' 
+    if: github.ref == 'refs/heads/qa'
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-          
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_... }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_... }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_... }}
-          
+
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'FoodPos-qa'
-          slot-name: 'Production'
+          app-name: "FoodPos-qa"
+          slot-name: "Production"
           package: .
