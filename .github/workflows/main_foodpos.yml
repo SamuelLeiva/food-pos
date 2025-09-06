@@ -120,4 +120,3 @@ jobs:
           app-name: "FoodPos-qa"
           slot-name: "Production"
           package: .
-
